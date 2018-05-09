@@ -1,0 +1,142 @@
+<!doctype html> 
+<html lang="en"> 
+<head> 
+    <meta charset="UTF-8" />
+    <title>lightbug.io</title>
+    <script src="lib/phaser.min.js"></script>
+    <style type="text/css">
+        body {
+            margin: 0;
+        }
+    </style>
+</head>
+<body>
+
+<script type="text/javascript">
+
+    var config = {
+        type: Phaser.AUTO,
+        width: 800,
+        height: 600,
+        scene: {
+            preload: preload,
+            create: create,
+            update: update
+        }
+    };
+
+    //var game = new Phaser.Game(config);
+    
+    var game = new Phaser.Game(800, 600, Phaser.AUTO, '', { preload: preload, create: create, update: update });
+
+    function preload ()
+    {
+        game.load.image('ground', 'assets/cavefloor.png');
+        game.load.image('firefly', 'assets/firefly.png');
+        game.load.physics('firefly_physics', 'assets/firefly_physics.json');
+    }
+
+    var player;
+
+
+    function create ()
+    {
+        //world size
+        game.world.setBounds(0, 0, 4000, 4000);
+        game.scale.scaleMode = Phaser.ScaleManager.RESIZE;
+
+        //enable p2 physics
+        game.physics.startSystem(Phaser.Physics.P2JS);
+
+        //background
+        var background = game.add.tileSprite(0, 0, 4000, 4000, 'ground');
+
+        //player sprite
+        player =  game.add.sprite(400, 300, 'firefly');
+        player.anchor.setTo(.5);
+
+        //player physics body
+        game.physics.p2.enable(player, true); //!!! true on for debug only
+        player.body.clearShapes();
+        player.body.loadPolygon('firefly_physics', 'firefly');
+        //player.body.setZeroDamping();
+        //player.body.fixedRotation = true;
+
+        game.camera.follow(player);
+
+        //circle barrier
+        var circle = game.add.graphics();
+        circle.lineStyle(2, 0xFF0000, 1);
+        circle.beginFill(0xFF0000, 1);
+        circle.drawCircle(game.world.centerX, game.world.centerY, 550);
+        //game.physics.p2.enable(circle);
+        //circle.body.setCircle(225);
+        //circle.body.static = true;
+    }
+
+    function update ()
+    {
+        var angleChange = 5; //degrees for which the player will turn at per update
+        //do not change angle if cursor is in body
+        var point = new Phaser.Point(game.input.worldX, game.input.worldY);
+        var bodies = game.physics.p2.hitTest(point, [player.body]);
+        //console.log(bodies.length);
+        if(!bodies.length){
+            var cursorAngle =  game.math.radToDeg(game.math.angleBetween(
+            player.body.x, player.body.y,
+            game.input.worldX, game.input.worldY)) + 90;
+            
+            if(cursorAngle < 0){
+                cursorAngle += 360;
+            }
+
+            var bodyAngle = player.body.angle;
+
+            if(bodyAngle < 0){
+                bodyAngle += 360;
+            }
+
+            //determine the angle to rotate
+            var difference = cursorAngle - bodyAngle;
+            if(difference < -180){
+                difference += 360;
+            } 
+            if (difference > 180){
+                difference -= 360;
+            } 
+
+            //apply the appropriate rotation
+            if(difference < 0){
+                if((difference * -1) > angleChange){
+                    player.body.angle -= angleChange;
+                }
+                else{
+                    player.body.angle += difference;
+                }
+            }
+            else if(cursorAngle > 0){
+                if(difference  > angleChange){
+                    player.body.angle += angleChange;
+                }
+                else{
+                    player.body.angle += difference;
+                }
+            }        
+            
+        }
+        player.body.moveForward(200);
+        
+
+        //player.body.x = game.input.worldX;
+        //player.body.y = game.input.worldY;
+    }
+
+    //return true if inside circle, false otherwise
+    function insideCircle(){
+        var distance = Math.sqrt(Math.pow((player.x - game.world.centerX), 2) + Math.pow(player.y - game.world.centerY, 2));
+    }
+
+</script>
+
+</body>
+</html>
