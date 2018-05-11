@@ -85,7 +85,11 @@
 
         game.camera.follow(player);
 
-        var pellet1 = pelletManager.createPellet(125, 0xFF0000, 800, 200);
+        //var pellet1 = pelletManager.createPellet(125, 0xFF0000, 800, 200);
+
+        //var pellet2 = pelletManager.createPellet(125, "RAND", 200, 800);
+
+        pelletManager.generatePellets(80, 10);
 
         //circle barrier
         //var circle = game.add.graphics();
