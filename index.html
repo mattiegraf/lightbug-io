@@ -4,6 +4,7 @@
     <meta charset="UTF-8" />
     <title>lightbug.io</title>
     <script src="lib/phaser.min.js"></script>
+    <script src="src/pellet.js"></script>
     <style type="text/css">
         body {
             margin: 0;
@@ -32,11 +33,15 @@
     function preload ()
     {
         game.load.image('ground', 'assets/cavefloor.png');
+        game.load.image('sball', 'assets/sball.png')
         game.load.image('firefly', 'assets/firefly.png');
         game.load.physics('firefly_physics', 'assets/firefly_physics.json');
     }
 
     var player;
+    
+    var pelletHit = 0;
+    var text;
 
 
     function create ()
@@ -47,9 +52,24 @@
 
         //enable p2 physics
         game.physics.startSystem(Phaser.Physics.P2JS);
+        //game.physics.p2.restitution = 0.8;
+
+        //turn on impact events for the world for collision callbacks
+        game.physics.p2.setImpactEvents(true);
+
+        var playerCollisionGroup = game.physics.p2.createCollisionGroup();
+        //this makes the groups collide with the world bounds
+        game.physics.p2.updateBoundsCollisionGroup();
+
 
         //background
         var background = game.add.tileSprite(0, 0, 4000, 4000, 'ground');
+
+        //pellets collected
+        text = game.add.text(0, 0, "pellets hit: 0", { font: "65px Arial", fill: "#ff0044", align: "center" });
+
+        var pelletManager = new Pellet(game);
+        pelletManager.collidesWith([pelletManager.cGroup, playerCollisionGroup]);
 
         //player sprite
         player =  game.add.sprite(400, 300, 'firefly');
@@ -59,19 +79,23 @@
         game.physics.p2.enable(player, true); //!!! true on for debug only
         player.body.clearShapes();
         player.body.loadPolygon('firefly_physics', 'firefly');
-        //player.body.setZeroDamping();
-        //player.body.fixedRotation = true;
+        
+        player.body.setCollisionGroup(playerCollisionGroup);
+        player.body.collides(pelletManager.cGroup, hitPellet);
 
         game.camera.follow(player);
 
+        var pellet1 = pelletManager.createPellet(125, 0xFF0000, 800, 200);
+
         //circle barrier
-        var circle = game.add.graphics();
-        circle.lineStyle(2, 0xFF0000, 1);
-        circle.beginFill(0xFF0000, 1);
-        circle.drawCircle(game.world.centerX, game.world.centerY, 550);
+        //var circle = game.add.graphics();
+        //circle.lineStyle(2, 0xFF0000, 1);
+        //circle.beginFill(0xFF0000, 1);
+        //circle.drawCircle(game.world.centerX, game.world.centerY, 550);
         //game.physics.p2.enable(circle);
         //circle.body.setCircle(225);
         //circle.body.static = true;
+        
     }
 
     function update ()
@@ -129,6 +153,20 @@
 
         //player.body.x = game.input.worldX;
         //player.body.y = game.input.worldY;
+    }
+
+    function hitPellet(playerBody, pelletBody){
+        //for callback, first param is the one being collided with, second is the collider
+        if(!pelletBody.hasCollided){
+            pelletBody.hasCollided = true;
+            //!!! should be replaced with a more reliable method of assuring pelletHit only increments once in the future
+            //i haven't had any issues with this but technically it is still not async safe (consider incrementing when
+            //things are going to be destroyed)
+            pelletBody.sprite.kill();
+            pelletHit++;
+            text.text = "pellets hit: " + pelletHit;
+        }
+        
     }
 
     //return true if inside circle, false otherwise
