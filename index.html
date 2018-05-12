@@ -6,6 +6,7 @@
     <script src="lib/phaser.min.js"></script>
     <script src="src/pellet.js"></script>
     <script src="src/lightbug.js"></script>
+    <script src="src/playerbug.js"></script>
     <style type="text/css">
         body {
             margin: 0;
@@ -26,8 +27,6 @@
             update: update
         }
     };
-
-    //var game = new Phaser.Game(config);
     
     var game = new Phaser.Game(800, 600, Phaser.AUTO, '', { preload: preload, create: create, update: update });
 
@@ -39,7 +38,7 @@
         game.load.physics('firefly_physics', 'assets/firefly_physics.json');
     }
 
-    var player;
+    var playerbug;
     var pelletManager;
     var lightbugManger;
     var pelletHit = 0;
@@ -71,9 +70,10 @@
         pelletManager.collidesWith([pelletManager.cGroup, lightbugManger.cGroup]);
         lightbugManger.collidesWith([[pelletManager.cGroup, Lightbug.hitPellet], [lightbugManger.cGroup, undefined]]);
 
-        player = lightbugManger.createLightbug(400, 300);
+        playerbug = lightbugManger.createLightbug(400, 300);
+        playerbug = new Playerbug(game, playerbug);
 
-        game.camera.follow(player);
+        game.camera.follow(playerbug.player);
 
         pelletManager.generatePellets(80, 10);
         lightbugManger.createLightbug(200, 800);
@@ -91,65 +91,9 @@
 
     function update ()
     {
-        var angleChange = 5; //degrees for which the player will turn at per update
-        //do not change angle if cursor is in body
-        var point = new Phaser.Point(game.input.worldX, game.input.worldY);
-        var bodies = game.physics.p2.hitTest(point, [player.body]);
-        //console.log(bodies.length);
-        if(!bodies.length){
-            var cursorAngle =  game.math.radToDeg(game.math.angleBetween(
-            player.body.x, player.body.y,
-            game.input.worldX, game.input.worldY)) + 90;
-            
-            if(cursorAngle < 0){
-                cursorAngle += 360;
-            }
-
-            var bodyAngle = player.body.angle;
-
-            if(bodyAngle < 0){
-                bodyAngle += 360;
-            }
-
-            //determine the angle to rotate
-            var difference = cursorAngle - bodyAngle;
-            if(difference < -180){
-                difference += 360;
-            } 
-            if (difference > 180){
-                difference -= 360;
-            } 
-
-            //apply the appropriate rotation
-            if(difference < 0){
-                if((difference * -1) > angleChange){
-                    player.body.angle -= angleChange;
-                }
-                else{
-                    player.body.angle += difference;
-                }
-            }
-            else if(cursorAngle > 0){
-                if(difference  > angleChange){
-                    player.body.angle += angleChange;
-                }
-                else{
-                    player.body.angle += difference;
-                }
-            }        
-            
-        }
-        player.body.moveForward(200);
-        
-
-        //player.body.x = game.input.worldX;
-        //player.body.y = game.input.worldY;
+        playerbug.move();
     }
 
-    //return true if inside circle, false otherwise
-    function insideCircle(){
-        var distance = Math.sqrt(Math.pow((player.x - game.world.centerX), 2) + Math.pow(player.y - game.world.centerY, 2));
-    }
 
 </script>
 
