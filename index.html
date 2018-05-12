@@ -5,6 +5,7 @@
     <title>lightbug.io</title>
     <script src="lib/phaser.min.js"></script>
     <script src="src/pellet.js"></script>
+    <script src="src/lightbug.js"></script>
     <style type="text/css">
         body {
             margin: 0;
@@ -39,7 +40,8 @@
     }
 
     var player;
-    
+    var pelletManager;
+    var lightbugManger;
     var pelletHit = 0;
     var text;
 
@@ -57,7 +59,7 @@
         //turn on impact events for the world for collision callbacks
         game.physics.p2.setImpactEvents(true);
 
-        var playerCollisionGroup = game.physics.p2.createCollisionGroup();
+        var lightbugCollisionGroup = game.physics.p2.createCollisionGroup();
         //this makes the groups collide with the world bounds
         game.physics.p2.updateBoundsCollisionGroup();
 
@@ -68,8 +70,11 @@
         //pellets collected
         text = game.add.text(0, 0, "pellets hit: 0", { font: "65px Arial", fill: "#ff0044", align: "center" });
 
-        var pelletManager = new Pellet(game);
-        pelletManager.collidesWith([pelletManager.cGroup, playerCollisionGroup]);
+        pelletManager = new Pellet(game);
+        lightbugManger = new Lightbug(game);
+
+        pelletManager.collidesWith([pelletManager.cGroup, lightbugManger.cGroup, lightbugCollisionGroup]);
+        lightbugManger.collidesWith([pelletManager.cGroup, lightbugManger.cGroup, lightbugCollisionGroup]);
 
         //player sprite
         player =  game.add.sprite(400, 300, 'firefly');
@@ -77,19 +82,20 @@
 
         //player physics body
         game.physics.p2.enable(player, true); //!!! true on for debug only
-        player.body.clearShapes();
-        player.body.loadPolygon('firefly_physics', 'firefly');
+        player.body.setCircle(50);
+        //player.body.clearShapes();
+        //player.body.loadPolygon('firefly_physics', 'firefly');
         
-        player.body.setCollisionGroup(playerCollisionGroup);
+        player.body.setCollisionGroup(lightbugCollisionGroup);
         player.body.collides(pelletManager.cGroup, hitPellet);
+        player.body.collides(lightbugManger.cGroup);
+
+       // player.body.collides(lightbugManger.cGroup);
 
         game.camera.follow(player);
 
-        //var pellet1 = pelletManager.createPellet(125, 0xFF0000, 800, 200);
-
-        //var pellet2 = pelletManager.createPellet(125, "RAND", 200, 800);
-
         pelletManager.generatePellets(80, 10);
+        lightbugManger.createLightbug(200, 800);
 
         //circle barrier
         //var circle = game.add.graphics();

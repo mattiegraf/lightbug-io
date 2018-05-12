@@ -69,4 +69,14 @@ class Pellet{
 
     }
 
+    rewardConsumers(){
+        this.group.forEachDead(this.rewardConsumersHelper);
+    }
+
+    rewardConsumersHelper(deadPellet){
+        if(deadPellet.killedBy != undefined){
+            //do stuff here
+            deadPellet.killedBy = undefined;
+        }
+    }
 }
