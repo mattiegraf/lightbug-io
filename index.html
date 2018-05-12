@@ -59,11 +59,6 @@
         //turn on impact events for the world for collision callbacks
         game.physics.p2.setImpactEvents(true);
 
-        var lightbugCollisionGroup = game.physics.p2.createCollisionGroup();
-        //this makes the groups collide with the world bounds
-        game.physics.p2.updateBoundsCollisionGroup();
-
-
         //background
         var background = game.add.tileSprite(0, 0, 4000, 4000, 'ground');
 
@@ -73,24 +68,10 @@
         pelletManager = new Pellet(game);
         lightbugManger = new Lightbug(game);
 
-        pelletManager.collidesWith([pelletManager.cGroup, lightbugManger.cGroup, lightbugCollisionGroup]);
-        lightbugManger.collidesWith([pelletManager.cGroup, lightbugManger.cGroup, lightbugCollisionGroup]);
+        pelletManager.collidesWith([pelletManager.cGroup, lightbugManger.cGroup]);
+        lightbugManger.collidesWith([[pelletManager.cGroup, Lightbug.hitPellet], [lightbugManger.cGroup, undefined]]);
 
-        //player sprite
-        player =  game.add.sprite(400, 300, 'firefly');
-        player.anchor.setTo(.5);
-
-        //player physics body
-        game.physics.p2.enable(player, true); //!!! true on for debug only
-        player.body.setCircle(50);
-        //player.body.clearShapes();
-        //player.body.loadPolygon('firefly_physics', 'firefly');
-        
-        player.body.setCollisionGroup(lightbugCollisionGroup);
-        player.body.collides(pelletManager.cGroup, hitPellet);
-        player.body.collides(lightbugManger.cGroup);
-
-       // player.body.collides(lightbugManger.cGroup);
+        player = lightbugManger.createLightbug(400, 300);
 
         game.camera.follow(player);
 
@@ -163,20 +144,6 @@
 
         //player.body.x = game.input.worldX;
         //player.body.y = game.input.worldY;
-    }
-
-    function hitPellet(playerBody, pelletBody){
-        //for callback, first param is the one being collided with, second is the collider
-        if(!pelletBody.hasCollided){
-            pelletBody.hasCollided = true;
-            //!!! should be replaced with a more reliable method of assuring pelletHit only increments once in the future
-            //i haven't had any issues with this but technically it is still not async safe (consider incrementing when
-            //things are going to be destroyed)
-            pelletBody.sprite.kill();
-            pelletHit++;
-            text.text = "pellets hit: " + pelletHit;
-        }
-        
     }
 
     //return true if inside circle, false otherwise
