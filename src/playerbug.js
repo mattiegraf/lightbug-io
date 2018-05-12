@@ -12,6 +12,9 @@ class Playerbug{
         var bodies = this.game.physics.p2.hitTest(point, [this.player.body]);
         //console.log(bodies.length);
         if(!bodies.length){
+            var bodyAngle;
+            var difference;
+
             var cursorAngle =  this.game.math.radToDeg(this.game.math.angleBetween(
             this.player.body.x, this.player.body.y,
             this.game.input.worldX, this.game.input.worldY)) + 90;
@@ -20,14 +23,14 @@ class Playerbug{
                 cursorAngle += 360;
             }
 
-            var bodyAngle = this.player.body.angle;
+            bodyAngle = this.player.body.angle;
 
             if(bodyAngle < 0){
                 bodyAngle += 360;
             }
 
             //determine the angle to rotate
-            var difference = cursorAngle - bodyAngle;
+            difference = cursorAngle - bodyAngle;
             if(difference < -180){
                 difference += 360;
             } 
@@ -60,5 +63,7 @@ class Playerbug{
         //player.body.x = game.input.worldX;
         //player.body.y = game.input.worldY;
     }
+
+    
 
 }

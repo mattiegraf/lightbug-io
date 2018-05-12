@@ -74,9 +74,18 @@ class Pellet{
     }
 
     rewardConsumersHelper(deadPellet){
-        if(deadPellet.killedBy != undefined){
+        if(deadPellet.eatenBy != undefined){
             //do stuff here
-            deadPellet.killedBy = undefined;
+            let consumer = deadPellet.eatenBy;
+            consumer.points += Pellet.sizeToPoints(deadPellet.width);
+            lightbugManger.resize(consumer);
+            deadPellet.eatenBy = undefined;
+
         }
+    }
+
+    //given a pellet's width, determine how many points it is worth
+    static sizeToPoints(width){
+        return width/2;
     }
 }

@@ -30,17 +30,13 @@ class Lightbug{
         this.cWith = cWith;
     }
 
-    static hitPellet(playerBody, pelletBody){
+    static hitPellet(bugBody, pelletBody){
         //for callback, first param is the one being collided with, second is the collider
-        if(!pelletBody.hasCollided){
-            pelletBody.hasCollided = true;
-            //!!! should be replaced with a more reliable method of assuring pelletHit only increments once in the future
-            //i haven't had any issues with this but technically it is still not async safe (consider incrementing when
-            //things are going to be destroyed)
-            pelletBody.sprite.kill();
-            pelletHit++;
-            text.text = "pellets hit: " + pelletHit;
-        }
+        pelletBody.sprite.eatenBy = bugBody.sprite;
+        pelletBody.sprite.kill();
+        pelletHit++;
+        text.text = "pellets hit: " + pelletHit;
+
         
     }
 
@@ -58,10 +54,30 @@ class Lightbug{
         for(i=0; i < this.cWith.length; i++){
             lb.body.collides(this.cWith[i][0], this.cWith[i][1]);
         }
+        lb.points = 0;
        
         return lb;
     }
 
+    resize(bug){
+        var i;
+        let scaleBy = 1;
+        scaleBy += bug.points * .01;
+
+        bug.scale.set(scaleBy);
+        bug.body.clearShapes();
+        bug.body.setCircle(bug.width/2);
+        bug.body.setCollisionGroup(this.cGroup);
+        for(i=0; i < this.cWith.length; i++){
+            bug.body.collides(this.cWith[i][0], this.cWith[i][1]);
+        }
+        
+    }
+
+    //how points affect size
+    static pointsToSize(points){
+        return 0;
+    }
 
 
 }
