@@ -4,8 +4,8 @@
     <meta charset="UTF-8" />
     <title>lightbug.io</title>
     <script src="lib/phaser.min.js"></script>
-    <script src="src/pellet.js"></script>
-    <script src="src/lightbug.js"></script>
+    <script src="src/PelletManager.js"></script>
+    <script src="src/LightbugManager.js"></script>
     <script src="src/playerbug.js"></script>
     <style type="text/css">
         body {
@@ -40,7 +40,7 @@
 
     var playerbug;
     var pelletManager;
-    var lightbugManger;
+    var lightbugManager;
     var pelletHit = 0;
     var text;
 
@@ -64,19 +64,22 @@
         //pellets collected
         text = game.add.text(0, 0, "pellets hit: 0", { font: "65px Arial", fill: "#ff0044", align: "center" });
 
-        pelletManager = new Pellet(game);
-        lightbugManger = new Lightbug(game);
+        pelletManager = new PelletManager(game);
+        lightbugManager = new LightbugManager(game);
 
-        pelletManager.collidesWith([pelletManager.cGroup, lightbugManger.cGroup]);
-        lightbugManger.collidesWith([[pelletManager.cGroup, Lightbug.hitPellet], [lightbugManger.cGroup, undefined]]);
+        pelletManager.setCollidesWith([pelletManager.collisionGroup, lightbugManager.collisionGroup]);
+        lightbugManager.setCollidesWith([[pelletManager.collisionGroup, LightbugManager.hitPellet], [lightbugManager.collisionGroup, undefined]]);
 
-        playerbug = lightbugManger.createLightbug(400, 300);
+        // !!! should just create a playerbug, this is absolutely whack
+        playerbug = lightbugManager.createLightbug(400, 300);
         playerbug = new Playerbug(game, playerbug);
 
         game.camera.follow(playerbug.player);
 
         pelletManager.generatePellets(80, 10);
-        lightbugManger.createLightbug(200, 800);
+
+        // !!! make a loop to handle AI generation here
+        lightbugManager.createLightbug(200, 800);
 
         //circle barrier
         //var circle = game.add.graphics();

@@ -1,6 +1,5 @@
-class Lightbug{
-    constructor(game, cWith){
-
+class LightbugManager{
+    constructor(game, collidesWith){
 
         //needs param:
         //  game
@@ -14,20 +13,18 @@ class Lightbug{
 
         this.game = game;
 
-        this.cGroup = game.physics.p2.createCollisionGroup();
+        this.collisionGroup = game.physics.p2.createCollisionGroup();
         //this makes the groups collide with the world bounds
         game.physics.p2.updateBoundsCollisionGroup();
 
         this.group = game.add.group();
         this.group.enableBody = true;
         this.group.physicsBodyType = Phaser.Physics.P2JS;
-
-        this.cWith = cWith;
-
+        this.collidesWith = collidesWith;
     }
 
-    collidesWith(cWith){
-        this.cWith = cWith;
+    setCollidesWith(collidesWith){
+        this.collidesWith = collidesWith;
     }
 
     static hitPellet(bugBody, pelletBody){
@@ -50,9 +47,9 @@ class Lightbug{
         lb.body.setCircle(50);    
         game.debug.body(lb);    
         
-        lb.body.setCollisionGroup(this.cGroup);
-        for(i=0; i < this.cWith.length; i++){
-            lb.body.collides(this.cWith[i][0], this.cWith[i][1]);
+        lb.body.setCollisionGroup(this.collisionGroup);
+        for(i=0; i < this.collidesWith.length; i++){
+            lb.body.collides(this.collidesWith[i][0], this.collidesWith[i][1]);
         }
         lb.points = 0;
        
@@ -67,9 +64,9 @@ class Lightbug{
         bug.scale.set(scaleBy);
         bug.body.clearShapes();
         bug.body.setCircle(bug.width/2);
-        bug.body.setCollisionGroup(this.cGroup);
-        for(i=0; i < this.cWith.length; i++){
-            bug.body.collides(this.cWith[i][0], this.cWith[i][1]);
+        bug.body.setCollisionGroup(this.collisionGroup);
+        for(i=0; i < this.collidesWith.length; i++){
+            bug.body.collides(this.collidesWith[i][0], this.collidesWith[i][1]);
         }
         
     }
