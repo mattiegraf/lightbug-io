@@ -100,6 +100,7 @@
         let randomPointinBounds;
         let botbug;
 
+        pelletManager.rewardConsumers();
         if(botbugs.length < Botbug.maxBotCount()){
             randomPointinBounds = boundary.randomPointWithinBoundary();
             botbug = lightbugManager.createLightbug(randomPointinBounds.x, randomPointinBounds.y);
@@ -111,7 +112,6 @@
         for(i=0; i < botbugs.length; i++){
             botbugs[i].move();
         }
-        pelletManager.rewardConsumers();
         pelletManager.killOutOfBoundPellets();
         lightbugManager.killOutOfBoundBugs();
         

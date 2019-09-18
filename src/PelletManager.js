@@ -63,7 +63,13 @@ class PelletManager{
         let i;
         for(i = 0; i < number; i++){
             let point = boundary.randomPointWithinBoundary();
-            this.createPellet(size, 'RAND', point.x, point.y);
+            let firstDead = this.group.getFirstDead();
+            if(firstDead){
+                firstDead.reset(point.x, point.y);
+            }
+            else{
+                this.createPellet(size, 'RAND', point.x, point.y);
+            }
         }
 
     }
@@ -73,7 +79,7 @@ class PelletManager{
     }
 
     rewardConsumersHelper(deadPellet){
-        if(deadPellet.eatenBy != undefined){
+        if(deadPellet.eatenBy !== undefined){
             //do stuff here
             let consumer = deadPellet.eatenBy;
             consumer.points += PelletManager.sizeToPoints(deadPellet.width);
