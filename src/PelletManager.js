@@ -62,7 +62,8 @@ class PelletManager{
     generatePellets(number, size){
         let i;
         for(i = 0; i < number; i++){
-            this.createPellet(size);
+            let point = boundary.randomPointWithinBoundary();
+            this.createPellet(size, 'RAND', point.x, point.y);
         }
 
     }
@@ -85,5 +86,27 @@ class PelletManager{
     //given a pellet's width, determine how many points it is worth
     static sizeToPoints(width){
         return width/2;
+    }
+
+    getClosestPellet(obj){
+        return this.group.getClosestTo(obj);
+    }
+
+    killOutOfBoundPellets(){
+        this.group.forEachAlive(this.killOutOfBoundPelletsHelper);
+    }
+
+    killOutOfBoundPelletsHelper(pellet){
+        if(!boundary.contains(pellet)){
+            pellet.kill();
+        }
+    }
+
+    static maxPelletCount(){
+        return 100;
+    }
+
+    aliveCount(){
+        return this.group.countLiving();
     }
 }

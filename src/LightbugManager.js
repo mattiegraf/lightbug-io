@@ -39,21 +39,21 @@ class LightbugManager{
 
     createLightbug(x, y){
         var i;
-        let lb = this.group.create(x, y, 'firefly');
-        lb.anchor.setTo(.5);
+        let lightbug = this.group.create(x, y, 'firefly');
+        lightbug.anchor.setTo(.5);
 
         //player physics body
         //game.physics.p2.enable(player, true); //!!! true on for debug only
-        lb.body.setCircle(50);    
-        game.debug.body(lb);    
+        lightbug.body.setCircle(50);    
+        game.debug.body(lightbug);    
         
-        lb.body.setCollisionGroup(this.collisionGroup);
+        lightbug.body.setCollisionGroup(this.collisionGroup);
         for(i=0; i < this.collidesWith.length; i++){
-            lb.body.collides(this.collidesWith[i][0], this.collidesWith[i][1]);
+            lightbug.body.collides(this.collidesWith[i][0], this.collidesWith[i][1]);
         }
-        lb.points = 0;
+        lightbug.points = 0;
        
-        return lb;
+        return lightbug;
     }
 
     resize(bug){
@@ -74,6 +74,16 @@ class LightbugManager{
     //how points affect size
     static pointsToSize(points){
         return 0;
+    }
+
+    killOutOfBoundBugs(){
+        this.group.forEachAlive(this.killOutOfBoundBugsHelper);
+    }
+
+    killOutOfBoundBugsHelper(bug){
+        if(!boundary.contains(bug)){
+            bug.kill();
+        }
     }
 
 

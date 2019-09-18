@@ -7,6 +7,8 @@
     <script src="src/PelletManager.js"></script>
     <script src="src/LightbugManager.js"></script>
     <script src="src/playerbug.js"></script>
+    <script src="src/botbug.js"></script>
+    <script src="src/Boundary.js"></script>
     <style type="text/css">
         body {
             margin: 0;
@@ -44,9 +46,12 @@
     var pelletHit = 0;
     var text;
 
+    var botbugs;
+    var boundary;
 
     function create ()
     {
+        let randomPointinBounds;
         //world size
         game.world.setBounds(0, 0, 4000, 4000);
         game.scale.scaleMode = Phaser.ScaleManager.RESIZE;
@@ -61,6 +66,8 @@
         //background
         var background = game.add.tileSprite(0, 0, 4000, 4000, 'ground');
 
+        boundary = new Boundary(game);
+
         //pellets collected
         text = game.add.text(0, 0, "pellets hit: 0", { font: "65px Arial", fill: "#ff0044", align: "center" });
 
@@ -70,32 +77,44 @@
         pelletManager.setCollidesWith([pelletManager.collisionGroup, lightbugManager.collisionGroup]);
         lightbugManager.setCollidesWith([[pelletManager.collisionGroup, LightbugManager.hitPellet], [lightbugManager.collisionGroup, undefined]]);
 
-        // !!! should just create a playerbug, this is absolutely whack
-        playerbug = lightbugManager.createLightbug(400, 300);
+        randomPointinBounds = boundary.randomPointWithinBoundary();
+        playerbug = lightbugManager.createLightbug(randomPointinBounds.x, randomPointinBounds.y);
         playerbug = new Playerbug(game, playerbug);
 
         game.camera.follow(playerbug.player);
 
-        pelletManager.generatePellets(80, 10);
+        pelletManager.generatePellets(PelletManager.maxPelletCount(), 10);
 
         // !!! make a loop to handle AI generation here
-        lightbugManager.createLightbug(200, 800);
+        randomPointinBounds = boundary.randomPointWithinBoundary();
+        botbug = lightbugManager.createLightbug(randomPointinBounds.x, randomPointinBounds.y);
+        botbug = new Botbug(game, botbug, pelletManager);
+        botbugs = [];
 
-        //circle barrier
-        //var circle = game.add.graphics();
-        //circle.lineStyle(2, 0xFF0000, 1);
-        //circle.beginFill(0xFF0000, 1);
-        //circle.drawCircle(game.world.centerX, game.world.centerY, 550);
-        //game.physics.p2.enable(circle);
-        //circle.body.setCircle(225);
-        //circle.body.static = true;
         
     }
 
     function update ()
     {
+        let i;
+        let randomPointinBounds;
+        let botbug;
+
+        if(botbugs.length < Botbug.maxBotCount()){
+            randomPointinBounds = boundary.randomPointWithinBoundary();
+            botbug = lightbugManager.createLightbug(randomPointinBounds.x, randomPointinBounds.y);
+            botbugs.push(new Botbug(game, botbug, pelletManager));
+        }
+        pelletManager.generatePellets(PelletManager.maxPelletCount() - pelletManager.aliveCount(), 10);
+
         playerbug.move();
+        for(i=0; i < botbugs.length; i++){
+            botbugs[i].move();
+        }
         pelletManager.rewardConsumers();
+        pelletManager.killOutOfBoundPellets();
+        lightbugManager.killOutOfBoundBugs();
+        
     }
 
 
