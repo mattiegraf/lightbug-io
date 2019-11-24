@@ -30,11 +30,7 @@ class LightbugManager{
     static hitPellet(bugBody, pelletBody){
         //for callback, first param is the one being collided with, second is the collider
         pelletBody.sprite.eatenBy = bugBody.sprite;
-        pelletBody.sprite.kill();
-        pelletHit++;
-        text.text = "pellets hit: " + pelletHit;
-
-        
+        pelletBody.sprite.kill();        
     }
 
     createLightbug(x, y){
@@ -86,5 +82,16 @@ class LightbugManager{
         }
     }
 
+    drawBugLights(){
+        this.group.forEachAlive(this.drawBugLight);
+    }
+
+    drawBugLight(bug){
+        shadowTexture.context.beginPath();
+        shadowTexture.context.fillStyle = 'rgb(255, 255, 255)';
+        shadowTexture.context.arc(bug.x - game.camera.x, bug.y - game.camera.y,
+            LIGHT_RADIUS * bug.scale.x, 0, Math.PI*2);
+        shadowTexture.context.fill();
+    }
 
 }
