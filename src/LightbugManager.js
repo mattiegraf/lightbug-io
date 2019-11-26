@@ -33,6 +33,17 @@ class LightbugManager{
         pelletBody.sprite.kill();        
     }
 
+    static hitLight(bugBody, lightBody){
+        //for callback, first param is the one being collided with, second is the collider
+        //console.log(lightBody.sprite);
+        if(lightBody.sprite.attacker !== bugBody.sprite){
+            bugBody.sprite.kill();
+            lightBody.sprite.kill();
+        }
+        //pelletBody.sprite.eatenBy = bugBody.sprite;
+        //pelletBody.sprite.kill();        
+    }
+
     createLightbug(x, y){
         var i;
         let lightbug = this.group.create(x, y, 'firefly');

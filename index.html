@@ -84,7 +84,7 @@
 
         pelletManager.setCollidesWith([pelletManager.collisionGroup, lightbugManager.collisionGroup]);
         lightbugManager.setCollidesWith([[pelletManager.collisionGroup, LightbugManager.hitPellet],
-            [lightbugManager.collisionGroup, undefined], [lightManager.collisionGroup, undefined]]);
+            [lightbugManager.collisionGroup, undefined], [lightManager.collisionGroup, LightbugManager.hitLight]]);
         lightManager.setCollidesWith([lightManager.collisionGroup, lightbugManager.collisionGroup]);
 
         randomPointinBounds = boundary.randomPointWithinBoundary();
@@ -163,6 +163,7 @@
         // Draw circle of light
 
         lightbugManager.drawBugLights();
+        lightManager.drawLights();
         /*shadowTexture.context.beginPath();
         shadowTexture.context.fillStyle = 'rgb(255, 255, 255)';
         shadowTexture.context.arc(playerbug.player.x - game.camera.x, playerbug.player.y - game.camera.y,
@@ -177,8 +178,6 @@
         text.setText("pellets hit: " + playerbug.player.points);
         text.position.x = game.camera.x;
         text.position.y = game.camera.y;
-        //text.setText("this is a test");
-
     }
 
 </script>
