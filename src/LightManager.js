@@ -56,6 +56,7 @@ class LightManager{
         
         lightSprite.body.setCollisionGroup(this.collisionGroup);
         lightSprite.body.collides(this.collidesWith);
+        lightSprite.body.angle = bug.body.angle;
         lightSprite.attacker = bug;
     }
 
@@ -69,6 +70,24 @@ class LightManager{
         shadowTexture.context.arc(light.x - game.camera.x, light.y - game.camera.y,
             LIGHT_RADIUS * light.scale.x, 0, Math.PI*2);
         shadowTexture.context.fill();
+    }
+
+    update(){
+        // move lights
+        this.group.forEachAlive(this.moveLight);
+        // kill lights outside of boundary
+        this.group.forEachAlive(this.killOutOfBoundLight);
+        // kill lights that have stayed over the time limit
+    }
+
+    moveLight(light){
+        light.body.moveForward(300);
+    }
+    
+    killOutOfBoundLight(light){
+        if(!boundary.contains(light)){
+            light.kill();
+        }
     }
 
 }
