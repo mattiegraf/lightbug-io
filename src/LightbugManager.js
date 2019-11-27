@@ -90,6 +90,9 @@ class LightbugManager{
     killOutOfBoundBugsHelper(bug){
         if(!boundary.contains(bug)){
             bug.kill();
+            if(bug === playerbug.player){
+                game.state.start('GameOver');
+            }
         }
     }
 

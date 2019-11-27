@@ -27,13 +27,6 @@ class LightManager{
         this.collidesWith = collidesWith;
     }
 
-    static hitLightbug(lightBody, bugBody){
-        //for callback, first param is the one being collided with, second is the collider
-        //pelletBody.sprite.eatenBy = bugBody.sprite;
-        console.log(lightBody);
-        //bugBody.sprite.kill();        
-    }
-
     createLight(bug){
         let colour = 0xFFFFFF;
         let radius = 11;
@@ -43,21 +36,30 @@ class LightManager{
         // p'y = sin(theta) * (px-ox) + cos(theta) * (py-oy) + oy
         let lightY = -1 * Math.cos(bug.body.angle * (Math.PI / 180)) * seperation + bug.y;
 
+        let lightSprite;
+        let firstDead = this.group.getFirstDead();
+        if(firstDead){
+            firstDead.reset(lightX, lightY);
+            lightSprite = firstDead;
+        } else {
+            let lightGraphic = this.game.add.graphics();
+            lightGraphic.lineStyle(2, colour, 1);
+            lightGraphic.beginFill(colour, 1);
+            lightGraphic.drawCircle(lightX, lightY, radius*2);
+            lightGraphic.endFill();
 
-        let lightGraphic = this.game.add.graphics();
-        lightGraphic.lineStyle(2, colour, 1);
-        lightGraphic.beginFill(colour, 1);
-        lightGraphic.drawCircle(lightX, lightY, radius*2);
-        lightGraphic.endFill();
-        let lightSprite = this.group.create(lightX, lightY, lightGraphic.generateTexture());
+            lightSprite = this.group.create(lightX, lightY, lightGraphic.generateTexture());
 
-        lightGraphic.destroy();
-        lightSprite.body.setCircle(radius);
-        
-        lightSprite.body.setCollisionGroup(this.collisionGroup);
-        lightSprite.body.collides(this.collidesWith);
+            lightGraphic.destroy();
+            lightSprite.body.setCircle(radius);
+            
+            lightSprite.body.setCollisionGroup(this.collisionGroup);
+            lightSprite.body.collides(this.collidesWith);
+        }
+
         lightSprite.body.angle = bug.body.angle;
         lightSprite.attacker = bug;
+        lightSprite.lifespan = 3000; //ms
     }
 
     drawLights(){
