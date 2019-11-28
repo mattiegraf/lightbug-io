@@ -69,7 +69,7 @@ var Game = {
 
         //console.log(game.scale.width);
         //console.log(window.innerWidth);
-        shadowTexture = game.add.bitmapData(window.innerWidth, window.innerHeight);
+        shadowTexture = game.add.bitmapData(window.screen.width, window.screen.height);
 
         // Create an object that will use the bitmap as a texture
         shadowSprite = game.add.image(game.camera.x, game.camera.y, shadowTexture);
