@@ -63,8 +63,6 @@ var Game = {
 
         // !!! make a loop to handle AI generation here
         randomPointinBounds = boundary.randomPointWithinBoundary();
-        botbug = lightbugManager.createLightbug(randomPointinBounds.x, randomPointinBounds.y);
-        botbug = new Botbug(game, botbug, pelletManager);
         botbugs = [];
 
         //console.log(game.scale.width);
