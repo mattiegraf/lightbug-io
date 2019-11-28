@@ -77,9 +77,11 @@ var Game = {
         // Set the blend mode to MULTIPLY. This will darken the colors of
         // everything below this sprite.
         shadowSprite.blendMode = Phaser.blendModes.MULTIPLY;
+        shadowSprite.fixedToCamera = true;
 
         //pellets collected
         text = game.add.text(0, 0, "pellets hit: 0", { font: "65px Arial", fill: "#ff0044", align: "center" });
+        text.fixedToCamera = true;
 
         wKey = game.input.keyboard.addKey(Phaser.Keyboard.W);
         wKey.onDown.add(function(){lightManager.createLight(playerbug.player);});
@@ -141,7 +143,5 @@ var Game = {
 
     updateText: function(){
         text.setText("pellets hit: " + playerbug.player.points);
-        text.position.x = game.camera.x;
-        text.position.y = game.camera.y;
     }
 };
