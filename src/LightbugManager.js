@@ -66,6 +66,9 @@ class LightbugManager{
     resize(bug){
         var i;
         let scaleBy = 1;
+        if(bug.points < 0){
+            bug.points = 0;
+        }
         scaleBy += bug.points * .01;
 
         bug.scale.set(scaleBy);

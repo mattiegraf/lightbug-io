@@ -28,6 +28,11 @@ class LightManager{
     }
 
     createLight(bug){
+        let cost = 1;
+        if(bug.points - cost < 0){
+            return;
+        }
+        
         let colour = 0xFFFFFF;
         let radius = 11;
         let seperation = 100 + (bug.height /2);
@@ -60,6 +65,8 @@ class LightManager{
         lightSprite.body.angle = bug.body.angle;
         lightSprite.attacker = bug;
         lightSprite.lifespan = 3000; //ms
+        bug.points -= cost;
+        lightbugManager.resize(bug);
     }
 
     drawLights(){
