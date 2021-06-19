@@ -8,7 +8,7 @@ class Playerbug{
     move(){
         var angleChange = 5; //degrees for which the player will turn at per update
         //do not change angle if cursor is in body
-        var point = new Phaser.Point(this.game.input.worldX, this.game.input.worldY);
+        var point = new Phaser.Point(this.game.input.mousePointer.x, this.game.input.mousePointer.y);
         var bodies = this.game.physics.p2.hitTest(point, [this.player.body]);
         //console.log(bodies.length);
         if(!bodies.length){
@@ -16,8 +16,8 @@ class Playerbug{
             var difference;
 
             var cursorAngle =  this.game.math.radToDeg(this.game.math.angleBetween(
-            this.player.body.x, this.player.body.y,
-            this.game.input.worldX, this.game.input.worldY)) + 90;
+            this.player.worldPosition.x, this.player.worldPosition.y,
+            this.game.input.mousePointer.x, this.game.input.mousePointer.y)) + 90;
             
             if(cursorAngle < 0){
                 cursorAngle += 360;
@@ -63,7 +63,5 @@ class Playerbug{
         //player.body.x = game.input.worldX;
         //player.body.y = game.input.worldY;
     }
-
-    
 
 }

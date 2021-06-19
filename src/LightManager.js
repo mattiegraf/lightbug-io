@@ -76,7 +76,7 @@ class LightManager{
     drawLight(light){
         shadowTexture.context.beginPath();
         shadowTexture.context.fillStyle = 'rgb(255, 255, 255)';
-        shadowTexture.context.arc(light.x - game.camera.x, light.y - game.camera.y,
+        shadowTexture.context.arc(light.worldPosition.x, light.worldPosition.y,
             LIGHT_RADIUS * light.scale.x, 0, Math.PI*2);
         shadowTexture.context.fill();
     }

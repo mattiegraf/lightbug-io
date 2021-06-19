@@ -21,6 +21,8 @@ class LightbugManager{
         this.group.enableBody = true;
         this.group.physicsBodyType = Phaser.Physics.P2JS;
         this.collidesWith = collidesWith;
+
+        this.bugDefaultScaling = 3;
     }
 
     setCollidesWith(collidesWith){
@@ -39,19 +41,21 @@ class LightbugManager{
         if(lightBody.sprite.attacker !== bugBody.sprite){
             bugBody.sprite.kill();
             lightBody.sprite.kill();
+            
         }
         //pelletBody.sprite.eatenBy = bugBody.sprite;
         //pelletBody.sprite.kill();        
     }
 
-    createLightbug(x, y){
+    createLightbug(x, y, name){
         var i;
         let lightbug = this.group.create(x, y, 'firefly');
         lightbug.anchor.setTo(.5);
 
         //player physics body
         //game.physics.p2.enable(player, true); //!!! true on for debug only
-        lightbug.body.setCircle(50);    
+        lightbug.scale.set(this.bugDefaultScaling);
+        lightbug.body.setCircle(lightbug.width/2);
         game.debug.body(lightbug);    
         
         lightbug.body.setCollisionGroup(this.collisionGroup);
@@ -59,18 +63,26 @@ class LightbugManager{
             lightbug.body.collides(this.collidesWith[i][0], this.collidesWith[i][1]);
         }
         lightbug.points = 0;
+        lightbug.name = name;
        
         return lightbug;
     }
 
     resize(bug){
         var i;
-        let scaleBy = 1;
         if(bug.points < 0){
             bug.points = 0;
         }
-        scaleBy += bug.points * .01;
 
+        if(bug === playerbug.player){
+            game.camera.scale.x = 1 / (1 + (playerbug.player.points * .01));
+            game.camera.scale.y = 1 / (1 + (playerbug.player.points * .01));
+            shadowSprite.scale.x = 1 / game.camera.scale.x;
+            shadowSprite.scale.y = 1 / game.camera.scale.y;
+        }
+
+        let scaleBy = this.bugDefaultScaling + (bug.points * .01 * this.bugDefaultScaling);
+        
         bug.scale.set(scaleBy);
         bug.body.clearShapes();
         bug.body.setCircle(bug.width/2);
@@ -94,6 +106,8 @@ class LightbugManager{
         if(!boundary.contains(bug)){
             bug.kill();
             if(bug === playerbug.player){
+                game.camera.scale.x = 1;
+                game.camera.scale.y = 1;
                 game.state.start('GameOver');
             }
         }
@@ -106,7 +120,7 @@ class LightbugManager{
     drawBugLight(bug){
         shadowTexture.context.beginPath();
         shadowTexture.context.fillStyle = 'rgb(255, 255, 255)';
-        shadowTexture.context.arc(bug.x - game.camera.x, bug.y - game.camera.y,
+        shadowTexture.context.arc(bug.worldPosition.x, bug.worldPosition.y,
             LIGHT_RADIUS * bug.scale.x, 0, Math.PI*2);
         shadowTexture.context.fill();
     }

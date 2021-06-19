@@ -10,8 +10,12 @@ var shadowTexture;
 var shadowSprite;
 
 var wKey;
+//var eKey;
 
 var LIGHT_RADIUS = 100;
+var ORIGINAL_WORLD_WIDTH = 8000;
+var ORIGINAL_WORLD_HEIGHT = 8000;
+
 
 var Game = {
     
@@ -26,10 +30,9 @@ var Game = {
     create: function(){
         let randomPointinBounds;
         //world size
-        game.world.setBounds(0, 0, 4000, 4000);
+        game.world.setBounds(0, 0, ORIGINAL_WORLD_WIDTH, ORIGINAL_WORLD_HEIGHT);
         game.scale.scaleMode = Phaser.ScaleManager.RESIZE;
         game.scale.fullScreenScaleMode = Phaser.ScaleManager.RESIZE;
-        
 
         //enable p2 physics
         game.physics.startSystem(Phaser.Physics.P2JS);
@@ -54,7 +57,7 @@ var Game = {
         lightManager.setCollidesWith([lightManager.collisionGroup, lightbugManager.collisionGroup]);
 
         randomPointinBounds = boundary.randomPointWithinBoundary();
-        playerbug = lightbugManager.createLightbug(randomPointinBounds.x, randomPointinBounds.y);
+        playerbug = lightbugManager.createLightbug(randomPointinBounds.x, randomPointinBounds.y, "YOU");
         playerbug = new Playerbug(game, playerbug);
 
         game.camera.follow(playerbug.player);
@@ -83,6 +86,9 @@ var Game = {
 
         wKey = game.input.keyboard.addKey(Phaser.Keyboard.W);
         wKey.onDown.add(function(){lightManager.createLight(playerbug.player);});
+
+        //eKey = game.input.keyboard.addKey(Phaser.Keyboard.E);
+        //eKey.onDown.add(function(){Game.scaleTest();});
     },
 
     update: function(){
@@ -93,7 +99,7 @@ var Game = {
         pelletManager.rewardConsumers();
         if(botbugs.length < Botbug.maxBotCount()){
             randomPointinBounds = boundary.randomPointWithinBoundary();
-            botbug = lightbugManager.createLightbug(randomPointinBounds.x, randomPointinBounds.y);
+            botbug = lightbugManager.createLightbug(randomPointinBounds.x, randomPointinBounds.y, "bot");
             botbugs.push(new Botbug(game, botbug, pelletManager));
         }
         pelletManager.generatePellets(PelletManager.maxPelletCount() - pelletManager.aliveCount(), 10);
@@ -140,6 +146,10 @@ var Game = {
     },
 
     updateText: function(){
-        text.setText("pellets hit: " + playerbug.player.points);
-    }
+        text.setText("points: " + playerbug.player.points);
+    },
+
+    /*scaleTest: function(){
+
+    }*/
 };
