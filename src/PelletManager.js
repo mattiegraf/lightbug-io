@@ -61,6 +61,10 @@ class PelletManager{
 
     generatePellets(number, size){
         let i;
+        if(number < 0){
+            return;
+        }
+        
         for(i = 0; i < number; i++){
             let point = boundary.randomPointWithinBoundary();
             let firstDead = this.group.getFirstDead();

@@ -147,7 +147,7 @@ var Game = {
 
     updateText: function(){
         text.setText("points: " + playerbug.player.points);
-    },
+    }
 
     /*scaleTest: function(){
 

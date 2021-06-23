@@ -3,6 +3,9 @@ class Playerbug{
         //to be done at a later date
         this.game = game;
         this.player = player;
+        this.dash = 50;
+        this.DASHMAX = 50;
+        this.cooldown = false;
     }
 
     move(){
@@ -58,6 +61,22 @@ class Playerbug{
             
         }
         this.player.body.moveForward(200);
+
+        if(this.game.input.keyboard.isDown(Phaser.KeyCode.R) && this.dash > 0  && !this.cooldown){
+            this.player.body.thrust(100000);
+            this.dash--;
+        }
+        else if(this.game.input.keyboard.isDown(Phaser.KeyCode.R) && this.dash === 0 && !this.cooldown){
+            this.cooldown = true;
+        }
+        else{
+            if(this.dash < this.DASHMAX){
+                this.dash++;
+            }
+            else{
+                this.cooldown = false;
+            }
+        }
         
 
         //player.body.x = game.input.worldX;
