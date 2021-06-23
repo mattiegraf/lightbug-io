@@ -78,6 +78,35 @@ class PelletManager{
 
     }
 
+    generatePelletsOnDeath(number, size, x, y, radius){
+        let i;
+        if(number < 0){
+            return;
+        }
+        
+        for(i = 0; i < number; i++){
+            let point = this.pointInsideDeathArea(radius, x, y);
+            let firstDead = this.group.getFirstDead();
+            if(firstDead){
+                firstDead.reset(point.x, point.y);
+            }
+            else{
+                this.createPellet(size, 'RAND', point.x, point.y);
+            }
+        }
+
+    }
+
+    pointInsideDeathArea(radius, x, y){
+        return new Phaser.Point(this.getRandomInt(x - radius, x + radius), this.getRandomInt(y - radius, y + radius));
+    }
+
+    getRandomInt(min, max) {
+        min = Math.ceil(min);
+        max = Math.floor(max);
+        return Math.floor(Math.random() * (max - min) + min); //The maximum is exclusive and the minimum is inclusive
+    }
+
     rewardConsumers(){
         this.group.forEachDead(this.rewardConsumersHelper);
     }
@@ -95,7 +124,7 @@ class PelletManager{
 
     //given a pellet's width, determine how many points it is worth
     static sizeToPoints(width){
-        return width/2;
+        return 1; // !!!
     }
 
     getClosestPellet(obj){

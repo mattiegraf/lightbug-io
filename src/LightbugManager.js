@@ -37,11 +37,12 @@ class LightbugManager{
 
     static hitLight(bugBody, lightBody){
         //for callback, first param is the one being collided with, second is the collider
-        //console.log(lightBody.sprite);
         if(lightBody.sprite.attacker !== bugBody.sprite){
+            let radius = bugBody.sprite.width / 2;
+            let points = bugBody.sprite.points;
             bugBody.sprite.kill();
             lightBody.sprite.kill();
-            
+            pelletManager.generatePelletsOnDeath(points, 10, bugBody.x, bugBody.y, radius);
         }
         //pelletBody.sprite.eatenBy = bugBody.sprite;
         //pelletBody.sprite.kill();        
