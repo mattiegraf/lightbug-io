@@ -7,18 +7,25 @@ class Boundary{
         //circleGraphic.beginFill(0xFF0000, 1);
         this.circleGraphic.drawCircle(this.game.world.centerX, this.game.world.centerY, this.game.world.bounds.width);
         
-        this.circle = new Phaser.Circle(this.game.world.centerX, this.game.world.centerY, this.game.world.bounds.width);
+        // outer boundary is the visible death circle that kills you if you go outside its bounds,
+        // inner boundary is a slightly smaller invisible circle that game elements are spawned inside of, and AI is programmed to stay inside it
+        this.outerBoundary = new Phaser.Circle(this.game.world.centerX, this.game.world.centerY, this.game.world.bounds.width);
+        this.innerBoundary = new Phaser.Circle(this.game.world.centerX, this.game.world.centerY, this.game.world.bounds.width - 500);
     }
 
-    contains(obj){
-        return this.circle.contains(obj.x, obj.y);
+    outerContains(obj){
+        return this.outerBoundary.contains(obj.x, obj.y);
+    }
+
+    innerContains(obj){
+        return this.innerBoundary.contains(obj.x, obj.y);
     }
 
     randomPointWithinBoundary(){
         let point;
         do {
             point = new Phaser.Point(this.game.world.randomX, this.game.world.randomY);
-        } while (!this.contains(point));
+        } while (!this.innerContains(point));
         
         return point;
     }

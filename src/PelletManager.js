@@ -127,8 +127,14 @@ class PelletManager{
         return 1; // !!!
     }
 
-    getClosestPellet(obj){
-        return this.group.getClosestTo(obj);
+    getClosestPelletLocation(obj){
+        let closest = this.group.getClosestTo(obj);
+        if(!closest){
+            return undefined;
+        }
+        else{
+            return new Phaser.Point(closest.x, closest.y);
+        }
     }
 
     killOutOfBoundPellets(){
@@ -136,7 +142,7 @@ class PelletManager{
     }
 
     killOutOfBoundPelletsHelper(pellet){
-        if(!boundary.contains(pellet)){
+        if(!boundary.outerContains(pellet)){
             pellet.kill();
         }
     }

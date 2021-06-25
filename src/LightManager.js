@@ -94,9 +94,18 @@ class LightManager{
     }
     
     killOutOfBoundLight(light){
-        if(!boundary.contains(light)){
+        if(!boundary.outerContains(light)){
             light.kill();
         }
     }
 
+    getClosestLightLocation(obj){
+        let closest = this.group.getClosestTo(obj);
+        if(!closest){
+            return undefined;
+        }
+        else{
+            return new Phaser.Point(closest.x, closest.y);
+        }
+    }
 }

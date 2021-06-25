@@ -106,7 +106,7 @@ var Game = {
 
         playerbug.move();
         for(i=0; i < botbugs.length; i++){
-            botbugs[i].move();
+            botbugs[i].act();
         }
 
         pelletManager.killOutOfBoundPellets();

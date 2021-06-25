@@ -104,7 +104,7 @@ class LightbugManager{
     }
 
     killOutOfBoundBugsHelper(bug){
-        if(!boundary.contains(bug)){
+        if(!boundary.outerContains(bug)){
             bug.kill();
             if(bug === playerbug.player){
                 game.camera.scale.x = 1;
@@ -126,4 +126,31 @@ class LightbugManager{
         shadowTexture.context.fill();
     }
 
+    // gets closest bug that isn't the same object. returns a lightbug or undefined.
+    getClosestBugLocation(bug){
+        let closestBug;
+        let closestDistance;
+        let i;
+
+        for(i = 0; i < this.group.children.length; i++){
+            if(this.group.children[i] !== bug && this.group.children[i].alive){
+                //find distance
+                let distance;
+                let a = bug.x - this.group.children[i].x;
+                let b = bug.y - this.group.children[i].y;
+                distance = Math.sqrt( a*a + b*b );
+                if(closestDistance === undefined || distance < closestDistance){
+                    closestBug = this.group.children[i];
+                    closestDistance = distance;
+                }
+            }
+        }
+
+        if(closestBug === undefined){
+            return undefined;
+        }
+        else{
+            return new Phaser.Point(closestBug.x, closestBug.y);
+        }
+    }
 }
