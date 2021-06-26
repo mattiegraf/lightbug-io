@@ -23,6 +23,7 @@ class Botbug{
         else if(this.bot.points > 0 && this.preyNearbyCheck()){
             // pursue/attack if another bug is in range, and its able to fire light
             this.moveTo(lightbugManager.getClosestBugLocation(this.bot));
+            this.attack();
         }
         else{
             this.moveTo(this.pelletManager.getClosestPelletLocation(this.bot));
@@ -189,6 +190,12 @@ class Botbug{
             else{
                 this.cooldown = false;
             }
+        }
+    }
+
+    attack(){
+        if(this.facingTarget){
+            lightManager.createLight(this.bot);
         }
     }
 

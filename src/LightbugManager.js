@@ -43,9 +43,13 @@ class LightbugManager{
             bugBody.sprite.kill();
             lightBody.sprite.kill();
             pelletManager.generatePelletsOnDeath(points, 10, bugBody.x, bugBody.y, radius);
-        }
-        //pelletBody.sprite.eatenBy = bugBody.sprite;
-        //pelletBody.sprite.kill();        
+
+            if(bugBody.sprite === playerbug.player){
+                game.camera.scale.x = 1;
+                game.camera.scale.y = 1;
+                game.state.start('GameOver');
+            }
+        }       
     }
 
     createLightbug(x, y, name){
