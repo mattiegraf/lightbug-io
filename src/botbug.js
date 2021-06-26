@@ -3,11 +3,10 @@ class Botbug{
         this.game = game;
         this.bot = bot;
         this.pelletManager = pelletManager;
-        this.attack = false;
-        this.dash = false;
         this.dashMeter = 50;
         this.DASHMAX = 50;
         this.cooldown = false;
+        this.facingTarget = false;
     }
 
     act(){
@@ -19,6 +18,7 @@ class Botbug{
         }
         else if(this.dangerNearbyCheck()){
             this.flee(this.getClosestDangerLocation(this.bot));
+            this.dash();
         }
         else if(this.bot.points > 0 && this.preyNearbyCheck()){
             // pursue/attack if another bug is in range, and its able to fire light
@@ -96,17 +96,21 @@ class Botbug{
         if(difference < 0){
             if((difference * -1) > angleChange){
                 this.bot.body.angle -= angleChange;
+                this.facingTarget = false;
             }
             else{
                 this.bot.body.angle += difference;
+                this.facingTarget = true;
             }
         }
         else if(targetAngle > 0){
             if(difference  > angleChange){
                 this.bot.body.angle += angleChange;
+                this.facingTarget = false;
             }
             else{
                 this.bot.body.angle += difference;
+                this.facingTarget = true;
             }
         }
     }
@@ -168,6 +172,24 @@ class Botbug{
         // now you need to check if it's in a circle/square around the bug, based on its scale
         let preyRadius = new Phaser.Circle(this.bot.x, this.bot.y, 500 * this.bot.scale.x);
         return preyRadius.contains(target.x, target.y);
+    }
+
+    dash(){
+        if(this.facingTarget && this.dashMeter > 0  && !this.cooldown){
+            this.bot.body.thrust(100000);
+            this.dashMeter--;
+        }
+        else if(this.facingTarget && this.dashMeter === 0 && !this.cooldown){
+            this.cooldown = true;
+        }
+        else{
+            if(this.dashMeter < this.DASHMAX){
+                this.dashMeter++;
+            }
+            else{
+                this.cooldown = false;
+            }
+        }
     }
 
 }
