@@ -157,4 +157,36 @@ class LightbugManager{
             return new Phaser.Point(closestBug.x, closestBug.y);
         }
     }
+
+    getTopFive(){
+        let i;
+        let leaderboard = [];
+        let playerInList = false;
+        let playerRank;
+        this.group.sort("points", Phaser.Group.SORT_DESCENDING);
+        for(i = 0; i < this.group.children.length && leaderboard.length < 5; i++){
+            if(this.group.children[i].alive){
+                if(this.group.children[i] === playerbug.player){
+                    playerInList = true;
+                }
+                leaderboard.push(["#" + (i + 1), this.group.children[i].name, this.group.children[i].points]);
+            }
+        }
+
+        if(!playerInList){
+            for(i = 0; i < this.group.children.length; i++){
+                if(this.group.children[i] === playerbug.player){
+                    playerRank = i + 1;
+                    break;
+                }
+            }
+            leaderboard.push(["#" + playerRank, playerbug.player.name, playerbug.player.points]);
+        }
+
+        return leaderboard;
+    }
+
+    getNumberAlive(){
+        return this.group.countLiving();
+    }
 }

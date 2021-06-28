@@ -2,7 +2,6 @@ var playerbug;
 var pelletManager;
 var lightbugManager;
 var lightManager;
-var text;
 
 var botbugs;
 var boundary;
@@ -11,6 +10,10 @@ var shadowSprite;
 
 var wKey;
 //var eKey;
+
+var textTitle;
+var textList;
+var textRemaining;
 
 var LIGHT_RADIUS = 100;
 var ORIGINAL_WORLD_WIDTH = 8000;
@@ -80,9 +83,15 @@ var Game = {
         shadowSprite.blendMode = Phaser.blendModes.MULTIPLY;
         shadowSprite.fixedToCamera = true;
 
-        //pellets collected
-        text = game.add.text(0, 0, "pellets hit: 0", { font: "65px Arial", fill: "#ff0044", align: "center" });
-        text.fixedToCamera = true;
+        // UI
+        textTitle = game.add.text(0, 0, "Leaderboard", { font: "30px Arial", fill: "#ff0044", align: "center" });
+        textTitle.fixedToCamera = true;
+
+        textList = game.add.text(0, 50, "", { font: "30px Arial", fill: "#ff0044", align: "left" });
+        textList.fixedToCamera = true;
+
+        textRemaining = game.add.text(0, 300, "", { font: "30px Arial", fill: "#ff0044", align: "left" });
+        textRemaining.fixedToCamera = true;
 
         wKey = game.input.keyboard.addKey(Phaser.Keyboard.W);
         wKey.onDown.add(function(){lightManager.createLight(playerbug.player);});
@@ -148,7 +157,9 @@ var Game = {
     },
 
     updateText: function(){
-        text.setText("points: " + playerbug.player.points);
+        let leaderboard = lightbugManager.getTopFive();
+        textList.parseList(leaderboard);
+        textRemaining.setText("Players Remaining: " + lightbugManager.getNumberAlive());
     }
 
     /*scaleTest: function(){
