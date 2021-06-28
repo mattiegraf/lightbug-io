@@ -11,6 +11,7 @@ var shadowSprite;
 var wKey;
 //var eKey;
 
+var textPanel;
 var textTitle;
 var textList;
 var textRemaining;
@@ -84,13 +85,20 @@ var Game = {
         shadowSprite.fixedToCamera = true;
 
         // UI
-        textTitle = game.add.text(0, 0, "Leaderboard", { font: "30px Arial", fill: "#ff0044", align: "center" });
+        textPanel = this.game.add.graphics();
+        textPanel.lineStyle(2, "#ffffff", 1);
+        textPanel.beginFill("#ffffff", .4);
+        textPanel.drawRoundedRect(10, 10, 300, 300, 7);
+        textPanel.endFill();
+        textPanel.fixedToCamera = true;        
+
+        textTitle = game.add.text(20, 20, "Leaderboard", { font: "bold 24px Arial", fill: "#ff0044", align: "center" });
         textTitle.fixedToCamera = true;
 
-        textList = game.add.text(0, 50, "", { font: "30px Arial", fill: "#ff0044", align: "left" });
+        textList = game.add.text(20, 70, "", { font: "18px Arial", fill: "#ff0044", align: "left", tabs: [40, 80] });
         textList.fixedToCamera = true;
 
-        textRemaining = game.add.text(0, 300, "", { font: "30px Arial", fill: "#ff0044", align: "left" });
+        textRemaining = game.add.text(20, 250, "", { font: "18px Arial", fill: "#ff0044", align: "left" });
         textRemaining.fixedToCamera = true;
 
         wKey = game.input.keyboard.addKey(Phaser.Keyboard.W);
@@ -159,7 +167,7 @@ var Game = {
     updateText: function(){
         let leaderboard = lightbugManager.getTopFive();
         textList.parseList(leaderboard);
-        textRemaining.setText("Players Remaining: " + lightbugManager.getNumberAlive());
+        textRemaining.setText("Players Remaining: " + lightbugManager.getNumberAlive() + "\nTime Remaining: ");
     }
 
     /*scaleTest: function(){

@@ -84,6 +84,15 @@ class LightbugManager{
             game.camera.scale.y = 1 / (1 + (playerbug.player.points * .01));
             shadowSprite.scale.x = 1 / game.camera.scale.x;
             shadowSprite.scale.y = 1 / game.camera.scale.y;
+
+            textPanel.scale.x = 1 / game.camera.scale.x;
+            textPanel.scale.y = 1 / game.camera.scale.y;
+            textTitle.scale.x = 1 / game.camera.scale.x;
+            textTitle.scale.y = 1 / game.camera.scale.y;
+            textList.scale.x = 1 / game.camera.scale.x;
+            textList.scale.y = 1 / game.camera.scale.y;
+            textRemaining.scale.x = 1 / game.camera.scale.x;
+            textRemaining.scale.y = 1 / game.camera.scale.y;
         }
 
         let scaleBy = this.bugDefaultScaling + (bug.points * .01 * this.bugDefaultScaling);
@@ -169,7 +178,7 @@ class LightbugManager{
                 if(this.group.children[i] === playerbug.player){
                     playerInList = true;
                 }
-                leaderboard.push(["#" + (i + 1), this.group.children[i].name, this.group.children[i].points]);
+                leaderboard.push(["#" + (leaderboard.length + 1), this.group.children[i].name, this.group.children[i].points]);
             }
         }
 
