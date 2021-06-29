@@ -53,7 +53,7 @@ class LightbugManager{
     }
 
     createLightbug(x, y, name){
-        var i;
+        let i;
         let lightbug = this.group.create(x, y, 'firefly');
         lightbug.anchor.setTo(.5);
 
@@ -73,8 +73,25 @@ class LightbugManager{
         return lightbug;
     }
 
+    reviveBug(x, y){
+        let i;
+        let firstDead = this.group.getFirstDead();
+        if(firstDead){
+            firstDead.reset(x, y);
+            firstDead.points = 0;
+            firstDead.scale.set(this.bugDefaultScaling);
+
+            firstDead.body.clearShapes();
+            firstDead.body.setCircle(firstDead.width/2);
+            firstDead.body.setCollisionGroup(this.collisionGroup);
+            for(i=0; i < this.collidesWith.length; i++){
+                firstDead.body.collides(this.collidesWith[i][0], this.collidesWith[i][1]);
+            }
+        }
+    }
+
     resize(bug){
-        var i;
+        let i;
         if(bug.points < 0){
             bug.points = 0;
         }

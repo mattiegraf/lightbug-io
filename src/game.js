@@ -125,8 +125,13 @@ var Game = {
         pelletManager.rewardConsumers();
         if((lightbugManager.getNumberAlive() < Botbug.maxBotCount() + 1) && continueRespawning){
             randomPointinBounds = boundary.randomPointWithinBoundary();
-            botbug = lightbugManager.createLightbug(randomPointinBounds.x, randomPointinBounds.y, "bot");
-            botbugs.push(new Botbug(game, botbug, pelletManager));
+            if(lightbugManager.getNumberAlive() < botbugs.length + 1){
+                lightbugManager.reviveBug(randomPointinBounds.x, randomPointinBounds.y);
+            }
+            else{
+                botbug = lightbugManager.createLightbug(randomPointinBounds.x, randomPointinBounds.y, "bot");
+                botbugs.push(new Botbug(game, botbug, pelletManager));
+            }
         }
         pelletManager.generatePellets(PelletManager.maxPelletCount() - pelletManager.aliveCount(), 10);
 
