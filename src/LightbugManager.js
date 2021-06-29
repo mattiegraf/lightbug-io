@@ -169,9 +169,10 @@ class LightbugManager{
 
     getTopFive(){
         let i;
+        let j;
         let leaderboard = [];
         let playerInList = false;
-        let playerRank;
+        let playerRank = 1;
         this.group.sort("points", Phaser.Group.SORT_DESCENDING);
         for(i = 0; i < this.group.children.length && leaderboard.length < 5; i++){
             if(this.group.children[i].alive){
@@ -183,10 +184,9 @@ class LightbugManager{
         }
 
         if(!playerInList){
-            for(i = 0; i < this.group.children.length; i++){
-                if(this.group.children[i] === playerbug.player){
-                    playerRank = i + 1;
-                    break;
+            for(i = 0; i < this.group.children.length && this.group.children[i] !== playerbug.player; i++){
+                if(this.group.children[i].alive){
+                    playerRank++;
                 }
             }
             leaderboard.push(["#" + playerRank, playerbug.player.name, playerbug.player.points]);

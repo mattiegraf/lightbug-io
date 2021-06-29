@@ -20,6 +20,9 @@ var LIGHT_RADIUS = 100;
 var ORIGINAL_WORLD_WIDTH = 8000;
 var ORIGINAL_WORLD_HEIGHT = 8000;
 
+var victory;
+var continueRespawning;
+var respawnTimer;
 
 var Game = {
     
@@ -106,6 +109,12 @@ var Game = {
 
         //eKey = game.input.keyboard.addKey(Phaser.Keyboard.E);
         //eKey.onDown.add(function(){Game.scaleTest();});
+
+        victory = false;
+        continueRespawning = true;
+        respawnTimer = game.time.create(false);
+        respawnTimer.add(Phaser.Timer.MINUTE * 3, () => {continueRespawning = false;});
+        respawnTimer.start();
     },
 
     update: function(){
@@ -114,7 +123,7 @@ var Game = {
         let botbug;
 
         pelletManager.rewardConsumers();
-        if(botbugs.length < Botbug.maxBotCount()){
+        if((lightbugManager.getNumberAlive() < Botbug.maxBotCount() + 1) && continueRespawning){
             randomPointinBounds = boundary.randomPointWithinBoundary();
             botbug = lightbugManager.createLightbug(randomPointinBounds.x, randomPointinBounds.y, "bot");
             botbugs.push(new Botbug(game, botbug, pelletManager));
@@ -135,6 +144,8 @@ var Game = {
 
         this.updateShadowTexture();
         this.updateText();
+
+        this.victoryCheck();
     },
 
     updateShadowTexture: function(){
@@ -167,10 +178,27 @@ var Game = {
     updateText: function(){
         let leaderboard = lightbugManager.getTopFive();
         textList.parseList(leaderboard);
-        textRemaining.setText("Players Remaining: " + lightbugManager.getNumberAlive() + "\nTime Remaining: ");
+        textRemaining.setText("Players Remaining: " + lightbugManager.getNumberAlive() + "\nTime Remaining: " + this.formatTime(respawnTimer.duration.toFixed(0)));
+    },
+
+    victoryCheck(){
+        if(lightbugManager.getNumberAlive() === 1 && playerbug.player.alive && !continueRespawning){
+            victory = true;
+            game.camera.scale.x = 1;
+            game.camera.scale.y = 1;
+            game.state.start('GameOver');
+        }
+    },
+
+    // display time in m:s remaining format
+    formatTime(ms){
+        let min = Math.floor(ms / Phaser.Timer.MINUTE);
+        ms = ms - (Phaser.Timer.MINUTE * min);
+
+        let s =  Math.floor(ms / Phaser.Timer.SECOND);
+        if(s < 10){
+            s = "0" + s;
+        }
+        return min + ":" + s;
     }
-
-    /*scaleTest: function(){
-
-    }*/
 };
