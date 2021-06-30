@@ -21,6 +21,8 @@ class LightManager{
         this.group.enableBody = true;
         this.group.physicsBodyType = Phaser.Physics.P2JS;
         this.collidesWith = collidesWith;
+
+        this.LIGHT_RADIUS = 100;
     }
 
     setCollidesWith(collidesWith){
@@ -77,7 +79,7 @@ class LightManager{
         shadowTexture.context.beginPath();
         shadowTexture.context.fillStyle = 'rgb(255, 255, 255)';
         shadowTexture.context.arc(light.worldPosition.x, light.worldPosition.y,
-            LIGHT_RADIUS * light.scale.x, 0, Math.PI*2);
+            lightManager.LIGHT_RADIUS * light.scale.x * game.camera.scale.x, 0, Math.PI*2);
         shadowTexture.context.fill();
     }
 

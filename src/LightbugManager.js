@@ -22,7 +22,8 @@ class LightbugManager{
         this.group.physicsBodyType = Phaser.Physics.P2JS;
         this.collidesWith = collidesWith;
 
-        this.bugDefaultScaling = 3;
+        this.bugDefaultScaling = 0.25;
+        this.LIGHT_RADIUS = 400;
     }
 
     setCollidesWith(collidesWith){
@@ -57,11 +58,10 @@ class LightbugManager{
         let lightbug = this.group.create(x, y, 'firefly');
         lightbug.anchor.setTo(.5);
 
-        //player physics body
-        //game.physics.p2.enable(player, true); //!!! true on for debug only
         lightbug.scale.set(this.bugDefaultScaling);
-        lightbug.body.setCircle(lightbug.width/2);
-        game.debug.body(lightbug);    
+        lightbug.body.setCircle((lightbug.width/2) - (lightbug.scale.x * 20));
+        //game.debug.body(lightbug);
+        //lightbug.body.debug = true;
         
         lightbug.body.setCollisionGroup(this.collisionGroup);
         for(i=0; i < this.collidesWith.length; i++){
@@ -82,7 +82,7 @@ class LightbugManager{
             firstDead.scale.set(this.bugDefaultScaling);
 
             firstDead.body.clearShapes();
-            firstDead.body.setCircle(firstDead.width/2);
+            firstDead.body.setCircle((firstDead.width/2) - (firstDead.scale.x * 20));
             firstDead.body.setCollisionGroup(this.collisionGroup);
             for(i=0; i < this.collidesWith.length; i++){
                 firstDead.body.collides(this.collidesWith[i][0], this.collidesWith[i][1]);
@@ -116,7 +116,7 @@ class LightbugManager{
         
         bug.scale.set(scaleBy);
         bug.body.clearShapes();
-        bug.body.setCircle(bug.width/2);
+        bug.body.setCircle((bug.width/2) - (bug.scale.x * 20));
         bug.body.setCollisionGroup(this.collisionGroup);
         for(i=0; i < this.collidesWith.length; i++){
             bug.body.collides(this.collidesWith[i][0], this.collidesWith[i][1]);
@@ -152,7 +152,7 @@ class LightbugManager{
         shadowTexture.context.beginPath();
         shadowTexture.context.fillStyle = 'rgb(255, 255, 255)';
         shadowTexture.context.arc(bug.worldPosition.x, bug.worldPosition.y,
-            LIGHT_RADIUS * bug.scale.x, 0, Math.PI*2);
+            lightbugManager.LIGHT_RADIUS * bug.scale.x * game.camera.scale.x, 0, Math.PI*2);
         shadowTexture.context.fill();
     }
 

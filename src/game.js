@@ -16,7 +16,6 @@ var textTitle;
 var textList;
 var textRemaining;
 
-var LIGHT_RADIUS = 100;
 var ORIGINAL_WORLD_WIDTH = 8000;
 var ORIGINAL_WORLD_HEIGHT = 8000;
 
@@ -28,10 +27,8 @@ var Game = {
     
 
     preload: function(){
-        game.load.image('ground', 'assets/cavefloor.png');
-        game.load.image('sball', 'assets/sball.png')
-        game.load.image('firefly', 'assets/firefly.png');
-        game.load.physics('firefly_physics', 'assets/firefly_physics.json');
+        game.load.image('ground', 'assets/cgshare-book-grass-003.jpg');
+        game.load.image('firefly', 'assets/firefly3.png');
     },
 
     create: function(){
@@ -49,8 +46,8 @@ var Game = {
         game.physics.p2.setImpactEvents(true);
 
         //background
-        //var background = game.add.tileSprite(0, 0, 4000, 4000, 'ground');
-        game.stage.backgroundColor = 0x4488cc;
+        var background = game.add.tileSprite(0, 0, ORIGINAL_WORLD_WIDTH, ORIGINAL_WORLD_HEIGHT, 'ground');
+        //game.stage.backgroundColor = 0x4488cc;
 
         boundary = new Boundary(game);
 
@@ -71,7 +68,6 @@ var Game = {
 
         pelletManager.generatePellets(PelletManager.maxPelletCount(), 10);
 
-        // !!! make a loop to handle AI generation here
         randomPointinBounds = boundary.randomPointWithinBoundary();
         botbugs = [];
 
