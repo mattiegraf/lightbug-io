@@ -1,19 +1,29 @@
 var GameOver = {
 
     preload : function() {
-        game.load.image('gameover', './assets/death-screen.png');
+        game.load.image('restart', './assets/restart-button.png');
     },
 
     create : function() {
-        game.world.setBounds(0, 0, 4000, 4000);
+        game.world.setBounds(0, 0, ORIGINAL_WORLD_WIDTH, ORIGINAL_WORLD_HEIGHT);
         game.scale.scaleMode = Phaser.ScaleManager.RESIZE;
         game.scale.fullScreenScaleMode = Phaser.ScaleManager.RESIZE;
 
         game.stage.backgroundColor = 0xFFFFFF;
 
-        this.add.button(0, 0, 'gameover', this.startGame, this);
+        let titleString;
+        victory ? titleString = "VICTORY" : titleString = "GAME OVER";
 
-        // Might be good to add stuff about how the player did here
+        let menuTitle = game.add.text(0, 0, titleString, { font: "bold 200px Arial", fill: "#ff0044", boundsAlignH: "center", boundsAlignV: "middle" });
+        menuTitle.setTextBounds(0, 0, window.innerWidth, window.innerHeight/1.25);
+
+        let detailsString = "You survived for " + Game.formatTime(totalTime) + "\nYou collected " + playerbug.player.points + " points";
+        let menuDetails = game.add.text(0, 0, detailsString, { font: "bold 50px Arial", fill: "#000000", boundsAlignH: "center", boundsAlignV: "bottom" });
+        menuDetails.setTextBounds(0, 0, window.innerWidth, window.innerHeight * .65);
+
+        let button = this.add.button(0, 0, 'restart', this.startGame, this);
+        button.centerX = window.innerWidth / 2;
+        button.centerY = window.innerHeight * .75;
     },
 
     startGame: function () {

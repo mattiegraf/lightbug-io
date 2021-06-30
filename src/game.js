@@ -22,6 +22,7 @@ var ORIGINAL_WORLD_HEIGHT = 8000;
 var victory;
 var continueRespawning;
 var respawnTimer;
+var totalTime;
 
 var Game = {
     
@@ -107,6 +108,7 @@ var Game = {
         //eKey.onDown.add(function(){Game.scaleTest();});
 
         victory = false;
+        totalTime = 0;
         continueRespawning = true;
         respawnTimer = game.time.create(false);
         respawnTimer.add(Phaser.Timer.MINUTE * 3, () => {continueRespawning = false;});
@@ -185,6 +187,7 @@ var Game = {
     victoryCheck(){
         if(lightbugManager.getNumberAlive() === 1 && playerbug.player.alive && !continueRespawning){
             victory = true;
+            totalTime = respawnTimer.ms;
             game.camera.scale.x = 1;
             game.camera.scale.y = 1;
             game.state.start('GameOver');

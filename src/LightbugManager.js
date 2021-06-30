@@ -48,6 +48,7 @@ class LightbugManager{
             if(bugBody.sprite === playerbug.player){
                 game.camera.scale.x = 1;
                 game.camera.scale.y = 1;
+                totalTime = respawnTimer.ms;
                 game.state.start('GameOver');
             }
         }       
@@ -139,6 +140,7 @@ class LightbugManager{
             if(bug === playerbug.player){
                 game.camera.scale.x = 1;
                 game.camera.scale.y = 1;
+                totalTime = respawnTimer.ms;
                 game.state.start('GameOver');
             }
         }
