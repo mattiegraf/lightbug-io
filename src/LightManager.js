@@ -92,7 +92,7 @@ class LightManager{
     }
 
     moveLight(light){
-        light.body.moveForward(300);
+        light.body.moveForward(400);
     }
     
     killOutOfBoundLight(light){

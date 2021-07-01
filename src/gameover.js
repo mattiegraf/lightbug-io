@@ -17,7 +17,7 @@ var GameOver = {
         let menuTitle = game.add.text(0, 0, titleString, { font: "bold 200px Arial", fill: "#ff0044", boundsAlignH: "center", boundsAlignV: "middle" });
         menuTitle.setTextBounds(0, 0, window.innerWidth, window.innerHeight/1.25);
 
-        let detailsString = "You survived for " + Game.formatTime(totalTime) + "\nYou collected " + playerbug.player.points + " points";
+        let detailsString = "You survived for " + Game.formatTime(totalTime) + "\nYou collected " + playerbug.player.points + " pellets";
         let menuDetails = game.add.text(0, 0, detailsString, { font: "bold 50px Arial", fill: "#000000", boundsAlignH: "center", boundsAlignV: "bottom" });
         menuDetails.setTextBounds(0, 0, window.innerWidth, window.innerHeight * .65);
 

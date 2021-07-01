@@ -8,9 +8,6 @@ var boundary;
 var shadowTexture;
 var shadowSprite;
 
-var wKey;
-//var eKey;
-
 var textPanel;
 var textTitle;
 var textList;
@@ -38,6 +35,7 @@ var Game = {
         game.world.setBounds(0, 0, ORIGINAL_WORLD_WIDTH, ORIGINAL_WORLD_HEIGHT);
         game.scale.scaleMode = Phaser.ScaleManager.RESIZE;
         game.scale.fullScreenScaleMode = Phaser.ScaleManager.RESIZE;
+        game.canvas.oncontextmenu = (e) => {e.preventDefault();};
 
         //enable p2 physics
         game.physics.startSystem(Phaser.Physics.P2JS);
@@ -101,11 +99,7 @@ var Game = {
         textRemaining = game.add.text(20, 250, "", { font: "18px Arial", fill: "#ff0044", align: "left" });
         textRemaining.fixedToCamera = true;
 
-        wKey = game.input.keyboard.addKey(Phaser.Keyboard.W);
-        wKey.onDown.add(function(){lightManager.createLight(playerbug.player);});
-
-        //eKey = game.input.keyboard.addKey(Phaser.Keyboard.E);
-        //eKey.onDown.add(function(){Game.scaleTest();});
+        game.input.onDown.add(function(){if(game.input.activePointer.rightButton.isDown){lightManager.createLight(playerbug.player)}});
 
         victory = false;
         totalTime = 0;

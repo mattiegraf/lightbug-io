@@ -2,7 +2,8 @@
 <html lang="en"> 
 <head> 
     <meta charset="UTF-8" />
-    <title>lightbug.io</title>
+    <title>Lightbug.io</title>
+    <link rel="shortcut icon" type="image/png" href="assets/firefly.png"/>
     <script src="lib/phaser.min.js"></script>
     <script src="src/menu.js"></script>
     <script src="src/game.js"></script>
@@ -23,7 +24,7 @@
 
 <script type="text/javascript">
     
-    var game = new Phaser.Game(800, 600, Phaser.AUTO, '');
+    var game = new Phaser.Game(800, 600, Phaser.CANVAS, '');
 
     game.state.add('Menu', Menu);
     game.state.add('Game', Game);

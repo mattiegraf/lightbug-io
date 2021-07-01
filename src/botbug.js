@@ -5,11 +5,14 @@ class Botbug{
         this.pelletManager = pelletManager;
         this.dashMeter = 50;
         this.DASHMAX = 50;
+        this.sinceLastAttack = 0;
         this.cooldown = false;
         this.facingTarget = false;
     }
 
     act(){
+        this.sinceLastAttack++;
+
         // movement determined by what is around the bot
         if(!boundary.innerContains(this.bot)){
             // if not in inner barrier, move back toward the center of the map, to avoid exiting the outer
@@ -34,7 +37,7 @@ class Botbug{
     // target: takes a Point or undefined
     moveTo(target){
         if(!target){
-            this.bot.body.moveForward(200);
+            this.bot.body.moveForward(100);
             return;
         }
 
@@ -44,19 +47,19 @@ class Botbug{
         }
         // don't change angle if bot is hitting its target, creates a weird vibrating effect otherwise
 
-        this.bot.body.moveForward(200);
+        this.bot.body.moveForward(100);
     }
 
     //move away from target point
     // target: a Point or undefined
     flee(target){
         if(!target){
-            this.bot.body.moveForward(200);
+            this.bot.body.moveForward(100);
             return;
         }
 
         this.setOrientation(target, false);
-        this.bot.body.moveForward(200);
+        this.bot.body.moveForward(100);
     }
 
     // sets the new oreintation of the bug for this update cycle
@@ -117,7 +120,7 @@ class Botbug{
     }
 
     static maxBotCount(){
-        return 10;
+        return 29;
     }
 
     dangerNearbyCheck(){
@@ -126,7 +129,7 @@ class Botbug{
             return false;
         }
         // now you need to check if it's in a circle/square around the bug, based on its scale
-        let dangerRadius = new Phaser.Circle(this.bot.x, this.bot.y, 250 * this.bot.scale.x);
+        let dangerRadius = new Phaser.Circle(this.bot.x, this.bot.y, 1250 * this.bot.scale.x);
         return dangerRadius.contains(target.x, target.y);
     }
 
@@ -171,7 +174,7 @@ class Botbug{
             return false;
         }
         // now you need to check if it's in a circle/square around the bug, based on its scale
-        let preyRadius = new Phaser.Circle(this.bot.x, this.bot.y, 500 * this.bot.scale.x);
+        let preyRadius = new Phaser.Circle(this.bot.x, this.bot.y, 5000 * this.bot.scale.x);
         return preyRadius.contains(target.x, target.y);
     }
 
@@ -194,8 +197,9 @@ class Botbug{
     }
 
     attack(){
-        if(this.facingTarget){
+        if(this.facingTarget && this.sinceLastAttack >= 20){
             lightManager.createLight(this.bot);
+            this.sinceLastAttack = 0;
         }
     }
 

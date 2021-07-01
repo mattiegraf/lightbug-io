@@ -16,7 +16,7 @@ class Playerbug{
         if(!bodies.length){
             this.setOrientation();
         }
-        this.player.body.moveForward(200);
+        this.player.body.moveForward(100);
         this.dash();
     }
 
@@ -46,7 +46,7 @@ class Playerbug{
         } 
         if (difference > 180){
             difference -= 360;
-        } 
+        }
 
         //apply the appropriate rotation
         if(difference < 0){
@@ -68,11 +68,11 @@ class Playerbug{
     }
 
     dash(){
-        if(this.game.input.keyboard.isDown(Phaser.KeyCode.R) && this.dashMeter > 0  && !this.cooldown){
-            this.player.body.thrust(100000);
+        if(this.game.input.activePointer.leftButton.isDown && this.dashMeter > 0  && !this.cooldown){
+            this.player.body.thrust(50000);
             this.dashMeter--;
         }
-        else if(this.game.input.keyboard.isDown(Phaser.KeyCode.R) && this.dashMeter === 0 && !this.cooldown){
+        else if(this.game.input.activePointer.leftButton.isDown && this.dashMeter === 0 && !this.cooldown){
             this.cooldown = true;
         }
         else{
