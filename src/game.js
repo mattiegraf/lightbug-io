@@ -15,6 +15,7 @@ var textRemaining;
 
 var ORIGINAL_WORLD_WIDTH = 8000;
 var ORIGINAL_WORLD_HEIGHT = 8000;
+var CAMERA_MIN = 0.321;
 
 var victory;
 var continueRespawning;

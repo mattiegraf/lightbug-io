@@ -97,7 +97,7 @@ class LightbugManager{
             bug.points = 0;
         }
 
-        if(bug === playerbug.player){
+        if(bug === playerbug.player && (1 / (1 + (playerbug.player.points * .01))) > CAMERA_MIN){
             game.camera.scale.x = 1 / (1 + (playerbug.player.points * .01));
             game.camera.scale.y = 1 / (1 + (playerbug.player.points * .01));
             shadowSprite.scale.x = 1 / game.camera.scale.x;
