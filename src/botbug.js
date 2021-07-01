@@ -72,6 +72,7 @@ class Botbug{
         let targetAngle =  this.game.math.radToDeg(this.game.math.angleBetween(
         this.bot.body.x, this.bot.body.y,
         target.x, target.y)) + 90;
+
         if(!pursueFlag){
             // moves targetAngle opposite to target, rather than to it
             targetAngle += 180;
@@ -128,11 +129,13 @@ class Botbug{
         if(target === undefined){
             return false;
         }
-        // now you need to check if it's in a circle/square around the bug, based on its scale
+        // check if it's in a circle/square around the bug, based on its scale
         let dangerRadius = new Phaser.Circle(this.bot.x, this.bot.y, 1250 * this.bot.scale.x);
         return dangerRadius.contains(target.x, target.y);
     }
 
+    // return the closest Light or Lightbug object (that isn't the given bug itself), 
+    // if any exist in the world
     getClosestDangerLocation(bug){
         let closestBug = lightbugManager.getClosestBugLocation(this.bot);
         let closestLight = lightManager.getClosestLightLocation(this.bot);
@@ -173,7 +176,7 @@ class Botbug{
         if(target === undefined){
             return false;
         }
-        // now you need to check if it's in a circle/square around the bug, based on its scale
+        // check if it's in a circle/square around the bug, based on its scale
         let preyRadius = new Phaser.Circle(this.bot.x, this.bot.y, 5000 * this.bot.scale.x);
         return preyRadius.contains(target.x, target.y);
     }

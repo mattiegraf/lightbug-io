@@ -1,10 +1,10 @@
 class Boundary{
     constructor(game){
         this.game = game;
-        // circleGraphic boundary
+        
+        // the visual boundary
         this.circleGraphic = this.game.add.graphics();
         this.circleGraphic.lineStyle(25, 0xFF0000, 1);
-        //circleGraphic.beginFill(0xFF0000, 1);
         this.circleGraphic.drawCircle(this.game.world.centerX, this.game.world.centerY, this.game.world.bounds.width);
         
         // outer boundary is the visible death circle that kills you if you go outside its bounds,

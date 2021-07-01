@@ -61,8 +61,6 @@ class LightbugManager{
 
         lightbug.scale.set(this.bugDefaultScaling);
         lightbug.body.setCircle((lightbug.width/2) - (lightbug.scale.x * 20));
-        //game.debug.body(lightbug);
-        //lightbug.body.debug = true;
         
         lightbug.body.setCollisionGroup(this.collisionGroup);
         for(i=0; i < this.collidesWith.length; i++){
@@ -74,6 +72,8 @@ class LightbugManager{
         return lightbug;
     }
 
+    // revive a dead bug
+    // used when possible to avoid loading in sprite (slow!) unnecessarily
     reviveBug(x, y){
         let i;
         let firstDead = this.group.getFirstDead();
@@ -97,6 +97,8 @@ class LightbugManager{
             bug.points = 0;
         }
 
+        // gives the effect that the player doens't grow, everything around it gets smaller by changing camera scale
+        // text elements remain same size
         if(bug === playerbug.player && (1 / (1 + (playerbug.player.points * .01))) > CAMERA_MIN){
             game.camera.scale.x = 1 / (1 + (playerbug.player.points * .01));
             game.camera.scale.y = 1 / (1 + (playerbug.player.points * .01));
@@ -186,6 +188,8 @@ class LightbugManager{
         }
     }
 
+    // returns an array of 5 lightbugs with the most points, or 6 lightbugs with the player being the last
+    // if the player is not in the top 5, so that the user is aware of their score
     getTopFive(){
         let i;
         let j;

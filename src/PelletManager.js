@@ -1,8 +1,3 @@
-//may change this into a PelletManager Class/Object later
-//where one object contains all info related to pellets
-
-//there is no point in making an object for each pellet as far as I can see
-
 class PelletManager{
     constructor(game, collidesWith){
         //needs param:
@@ -23,7 +18,6 @@ class PelletManager{
         this.group.enableBody = true;
         this.group.physicsBodyType = Phaser.Physics.P2JS;
         this.collidesWith = collidesWith;
-
     }
 
     //so that if this is not set intially it can be reset later.
@@ -33,8 +27,8 @@ class PelletManager{
 
     createPellet(radius, colour, x, y){
 
-        //random handling
-        //no random radius allowed at current time
+        //random colour, position handling
+        //no random radius allowed
         if(colour === 'RAND' || colour === undefined){
            colour = Phaser.Color.getRandomColor();
         }
@@ -78,6 +72,7 @@ class PelletManager{
 
     }
 
+    // lightbug drops all of its collected pellets on death
     generatePelletsOnDeath(number, size, x, y, radius){
         let i;
         if(number < 0){
@@ -113,18 +108,16 @@ class PelletManager{
 
     rewardConsumersHelper(deadPellet){
         if(deadPellet.eatenBy !== undefined){
-            //do stuff here
             let consumer = deadPellet.eatenBy;
             consumer.points += PelletManager.sizeToPoints(deadPellet.width);
             lightbugManager.resize(consumer);
             deadPellet.eatenBy = undefined;
-
         }
     }
 
     //given a pellet's width, determine how many points it is worth
     static sizeToPoints(width){
-        return 1; // !!!
+        return 1; // all pellets worth one currently
     }
 
     getClosestPelletLocation(obj){

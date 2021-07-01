@@ -1,6 +1,5 @@
 class Playerbug{
     constructor(game, player){
-        //to be done at a later date
         this.game = game;
         this.player = player;
         this.dashMeter = 50;
@@ -12,7 +11,6 @@ class Playerbug{
         //do not change angle if cursor is in body
         let point = new Phaser.Point(this.game.input.mousePointer.x, this.game.input.mousePointer.y);
         let bodies = this.game.physics.p2.hitTest(point, [this.player.body]);
-        //console.log(bodies.length);
         if(!bodies.length){
             this.setOrientation();
         }

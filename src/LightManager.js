@@ -29,6 +29,7 @@ class LightManager{
         this.collidesWith = collidesWith;
     }
 
+    // create light if the lightbug meets the size/point cost requirement, and resize
     createLight(bug){
         let cost = 1;
         if(bug.points - cost < 0){
@@ -84,11 +85,8 @@ class LightManager{
     }
 
     update(){
-        // move lights
         this.group.forEachAlive(this.moveLight);
-        // kill lights outside of boundary
         this.group.forEachAlive(this.killOutOfBoundLight);
-        // kill lights that have stayed over the time limit
     }
 
     moveLight(light){

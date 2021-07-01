@@ -1,8 +1,8 @@
-var playerbug;
 var pelletManager;
 var lightbugManager;
 var lightManager;
 
+var playerbug;
 var botbugs;
 var boundary;
 var shadowTexture;
@@ -17,10 +17,10 @@ var ORIGINAL_WORLD_WIDTH = 8000;
 var ORIGINAL_WORLD_HEIGHT = 8000;
 var CAMERA_MIN = 0.321;
 
-var victory;
 var continueRespawning;
 var respawnTimer;
 var totalTime;
+var victory;
 
 var Game = {
     
@@ -32,23 +32,18 @@ var Game = {
 
     create: function(){
         let randomPointinBounds;
-        //world size
+
         game.world.setBounds(0, 0, ORIGINAL_WORLD_WIDTH, ORIGINAL_WORLD_HEIGHT);
         game.scale.scaleMode = Phaser.ScaleManager.RESIZE;
         game.scale.fullScreenScaleMode = Phaser.ScaleManager.RESIZE;
+
+        // prevent right click from opening a context menu while clicking the game
         game.canvas.oncontextmenu = (e) => {e.preventDefault();};
 
-        //enable p2 physics
         game.physics.startSystem(Phaser.Physics.P2JS);
-        //game.physics.p2.restitution = 0.8;
-
-        //turn on impact events for the world for collision callbacks
         game.physics.p2.setImpactEvents(true);
 
-        //background
-        var background = game.add.tileSprite(0, 0, ORIGINAL_WORLD_WIDTH, ORIGINAL_WORLD_HEIGHT, 'ground');
-        //game.stage.backgroundColor = 0x4488cc;
-
+        game.add.tileSprite(0, 0, ORIGINAL_WORLD_WIDTH, ORIGINAL_WORLD_HEIGHT, 'ground');
         boundary = new Boundary(game);
 
         pelletManager = new PelletManager(game);
@@ -63,7 +58,6 @@ var Game = {
         randomPointinBounds = boundary.randomPointWithinBoundary();
         playerbug = lightbugManager.createLightbug(randomPointinBounds.x, randomPointinBounds.y, "YOU");
         playerbug = new Playerbug(game, playerbug);
-
         game.camera.follow(playerbug.player);
 
         pelletManager.generatePellets(PelletManager.maxPelletCount(), 10);
@@ -71,15 +65,8 @@ var Game = {
         randomPointinBounds = boundary.randomPointWithinBoundary();
         botbugs = [];
 
-        //console.log(game.scale.width);
-        //console.log(window.innerWidth);
         shadowTexture = game.add.bitmapData(window.screen.width, window.screen.height);
-
-        // Create an object that will use the bitmap as a texture
         shadowSprite = game.add.image(game.camera.x, game.camera.y, shadowTexture);
-
-        // Set the blend mode to MULTIPLY. This will darken the colors of
-        // everything below this sprite.
         shadowSprite.blendMode = Phaser.blendModes.MULTIPLY;
         shadowSprite.fixedToCamera = true;
 
@@ -100,14 +87,16 @@ var Game = {
         textRemaining = game.add.text(20, 250, "", { font: "18px Arial", fill: "#ff0044", align: "left" });
         textRemaining.fixedToCamera = true;
 
+        // setting right click ability callback
         game.input.onDown.add(function(){if(game.input.activePointer.rightButton.isDown){lightManager.createLight(playerbug.player)}});
 
-        victory = false;
         totalTime = 0;
         continueRespawning = true;
         respawnTimer = game.time.create(false);
         respawnTimer.add(Phaser.Timer.MINUTE * 3, () => {continueRespawning = false;});
         respawnTimer.start();
+
+        victory = false;
     },
 
     update: function(){
@@ -116,6 +105,8 @@ var Game = {
         let botbug;
 
         pelletManager.rewardConsumers();
+
+        // bot respawn loop
         if((lightbugManager.getNumberAlive() < Botbug.maxBotCount() + 1) && continueRespawning){
             randomPointinBounds = boundary.randomPointWithinBoundary();
             if(lightbugManager.getNumberAlive() < botbugs.length + 1){
@@ -159,15 +150,9 @@ var Game = {
         shadowTexture.context.fillStyle = 'rgb(50, 50, 50)';
         shadowTexture.context.fillRect(0, 0, game.width, game.height);
 
-        // Draw circle of light
-
+        // Draw circles of light
         lightbugManager.drawBugLights();
         lightManager.drawLights();
-        /*shadowTexture.context.beginPath();
-        shadowTexture.context.fillStyle = 'rgb(255, 255, 255)';
-        shadowTexture.context.arc(playerbug.player.x - game.camera.x, playerbug.player.y - game.camera.y,
-            LIGHT_RADIUS * playerbug.player.scale.x, 0, Math.PI*2);
-        shadowTexture.context.fill();*/
 
         // This just tells the engine it should update the texture cache
         shadowTexture.dirty = true;
